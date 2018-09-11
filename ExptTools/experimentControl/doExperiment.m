@@ -21,7 +21,7 @@ params   = setFixationParams(params, stimulus);
 % overwriting text in scripts. But it is dangerous because if the code
 % quits prematurely, the user may be left unable to type in the command
 % window. Command window access can be restored by control-C.
-ListenChar(1);
+ListenChar(2);
 
 % loading mex functions for the first time can be
 % extremely slow (seconds!), so we want to make sure that
