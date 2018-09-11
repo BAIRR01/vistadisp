@@ -88,7 +88,7 @@ for frame = 1:nFrames
         
         % Check for serial port if we are at UMC-3T or UMC-7T
         switch params.site
-            case {'UMC3T' 'UMC7T'}
+            case {'umc3t' 'umc7t'}
                 
                 % At these sites, the subject response is sent through a
                 % serial port which KbCheck cannot read, so we use
@@ -118,7 +118,7 @@ for frame = 1:nFrames
                     
                 case params.triggerKey
                     switch params.site
-                        case {'NYU3T'}
+                        case {'nyu3t'}
                             % do nothing as this is the trigger key from the scanner
                         otherwise
                              % record the subject response

@@ -21,7 +21,7 @@ params   = setFixationParams(params, stimulus);
 % overwriting text in scripts. But it is dangerous because if the code
 % quits prematurely, the user may be left unable to type in the command
 % window. Command window access can be restored by control-C.
-ListenChar(2);
+ListenChar(1);
 
 % loading mex functions for the first time can be
 % extremely slow (seconds!), so we want to make sure that
@@ -96,32 +96,29 @@ try
         % This used to be in the filename but was removed because of BIDS
         % requirements; now saving it along with the other variables 
         
-        % Include a runNumber field to indicate if this is a repeat run
+        % Include a runNumber field to indicate if this is a repeat run of
+        % a previously loaded stimulus file
         params.runNumber = params.runID;
         % This number will be updated below if previous instantiations of
         % this run exist in the folder where the data is saved.
        
-        % Generate save name using BIDS naming convention: exclude runNumber
-        tempname = sprintf('sub-%s_ses-%s%s_task-%s_run-*.mat', ...
-            params.subjID, params.site, params.sessionID, params.experiment);
-        
-        % Check if runNumber already exists
-        D = dir(fullfile(pth, tempname));
-        if length(D) >= params.runNumber
-            % Update params.runNumber to not overwrite existing file [Note
-            % that params.runID and the tsv stim_file will still refer to
-            % the identity of the stimfile that was loaded for this run]
-            params.runNumber = length(D)+1;
-        end
-        
-        % Generate save name using BIDS naming convention:include runNumber
+        % Generate save name using BIDS naming convention
         fname = sprintf('sub-%s_ses-%s%s_task-%s_run-%d', ...
             params.subjID, params.site, params.sessionID, params.experiment, params.runNumber);
-            
+        
+        % Check if there is already an output file with this save name. If
+        % so, update params.runNumber to not overwrite existing file. Note
+        % that params.runID and params.loadMatrix the output mat file will
+        % still refer to the stimfile that was loaded for this run.
+        while exist(fullfile(pth, sprintf('%s.mat', fname)), 'file')
+            params.runNumber = params.runNumber+1;
+            fname = sprintf('sub-%s_ses-%s%s_task-%s_run-%d', ...
+                params.subjID, params.site, params.sessionID, params.experiment, params.runNumber);
+        end
+        
         % Everything in the workspace will be saved!
         save(fullfile(pth, sprintf('%s.mat', fname)));
-        
-        fprintf('[%s]:Saving in %s.\n', mfilename, fullfile(pth, fname));
+        fprintf('[%s]:Saving in %s.\n', mfilename, fullfile(pth, sprintf('%s.mat', fname)));
         
         % Write out the tsv file
         if any(contains(fieldnames(stimulus), 'tsv'))
