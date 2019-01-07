@@ -63,6 +63,7 @@ response.keyCode = zeros(length(stimulus.seq),1); % get 1 buttons max
 response.secs = zeros(size(stimulus.seq));        % timing
 quitProg = 0;
 response.flip = [];
+response.glove = zeros(length(stimulus.seq), 5);
 
 % go
 HideCursor();
@@ -166,6 +167,10 @@ for frame = 1:nFrames
             case 'umcecog'
                 fprintf(params.siteSpecific.port_triggers, '%c', stimulus.trigSeq(frame));
         end
+    end
+    
+    if strcmpi(params.sensoryDomain, 'motor')
+       response.glove(frame,:) = sampleDataglove (params.glovePointer); 
     end
     
     % Record the flip time
