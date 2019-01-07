@@ -57,22 +57,23 @@ switch lower(params.site)
         % psychtoolbox
         fix_psychtoolbox_path();
         
-        COM_PORT = 'COM6';
+        % Button Box Serial Port (the same as fMRI)
+        COM_PORT_BTNBOX = 'COM5';
         
-        % First, find the serial port
-        
-        % Open serial port 
-        if ~isempty(COM_PORT)
-            portName = serial(COM_PORT);  % works with serial, not IOPort
-            fopen(portName);
-            params.siteSpecific.port = portName;
-        
+        if ~isempty(COM_PORT_BTNBOX)
+            params.siteSpecific.port = deviceUMC('open', COM_PORT_BTNBOX);
         else
-            
-            % For testing on a computer without a serial port, deviceUMC.m
-            % can take a negative number as portname input and still run
             params.siteSpecific.port = -1; % deviceUMC('open',portName);
-        
+        end
+
+        % Triggers Serial Port
+        COM_PORT_TRIGGERS = 'COM6';
+        if ~isempty(COM_PORT_TRIGGERS)
+            portName = serial(COM_PORT_TRIGGERS);
+            fopen(portName);
+            params.siteSpecific.port_triggers = portName;
+        else
+            params.siteSpecific.port_triggers = -1;
         end
         
     otherwise

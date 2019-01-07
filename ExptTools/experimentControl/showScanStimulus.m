@@ -86,9 +86,9 @@ for frame = 1:nFrames
     %--- get inputs (subject or experimentor)
     while(waitTime<0)
         
-        % Check for serial port if we are at UMC-3T or UMC-7T
+        % Check for serial port if we are at UMC-3T or UMC-7T or UMC-ECOG
         switch params.site
-            case {'umc3t' 'umc7t'}
+            case {'umc3t' 'umc7t' 'umcecog'}
                 
                 % At these sites, the subject response is sent through a
                 % serial port which KbCheck cannot read, so we use
@@ -164,7 +164,7 @@ for frame = 1:nFrames
                 thisCode = sprintf('%4.0d', stimulus.trigSeq(frame));
                 NetStation('Event', thisCode,VBLTimestamp);
             case 'umcecog'
-                fprintf(params.siteSpecific.port, '%c', stimulus.trigSeq(frame));
+                fprintf(params.siteSpecific.port_triggers, '%c', stimulus.trigSeq(frame));
         end
     end
     
