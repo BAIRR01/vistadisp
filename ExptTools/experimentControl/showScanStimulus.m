@@ -64,6 +64,8 @@ response.secs = zeros(size(stimulus.seq));        % timing
 quitProg = 0;
 response.flip = [];
 response.glove = zeros(length(stimulus.seq), 5);
+imgChangeIdx = find(diff(stimulus.seq)~= 0); %frames when images change
+
 
 % go
 HideCursor();
@@ -78,8 +80,16 @@ for frame = 1:nFrames
     
     % put in an image
     imgNum = mod(stimulus.seq(frame)-1,nImages)+1;
-    Screen('DrawTexture', display.windowPtr, stimulus.textures(imgNum), stimulus.srcRect, stimulus.dstRect);
-    drawFixation(params,stimulus.fixSeq(frame));
+    if strcmpi(params.sensoryDomain, 'motor')
+        if any(frame == imgChangeIdx)
+            Screen('DrawTexture', display.windowPtr, stimulus.textures(imgNum), stimulus.srcRect, stimulus.dstRect);
+        else
+            % don't draw a new image
+        end
+    else
+        Screen('DrawTexture', display.windowPtr, stimulus.textures(imgNum), stimulus.srcRect, stimulus.dstRect);
+        drawFixation(params,stimulus.fixSeq(frame));
+    end
     
     %--- timing
     waitTime = getWaitTime(stimulus, response, frame,  t0, timeFromT0);
@@ -110,8 +120,8 @@ for frame = 1:nFrames
                 str = str{1};
             end
             str = str(1);
-
-            switch str                
+            
+            switch str
                 case quitProgKey
                     % Quit the experiment gracefully
                     quitProg = 1;
@@ -122,15 +132,15 @@ for frame = 1:nFrames
                         case {'nyu3t'}
                             % do nothing as this is the trigger key from the scanner
                         otherwise
-                             % record the subject response
+                            % record the subject response
                             response.keyCode(frame) = str;
-                            response.secs(frame)    = ssSecs - t0;  
+                            response.secs(frame)    = ssSecs - t0;
                     end
                     
                 otherwise
                     % record the subject response
                     response.keyCode(frame) = str;
-                    response.secs(frame)    = ssSecs - t0;                                        
+                    response.secs(frame)    = ssSecs - t0;
             end
         end
         
@@ -150,7 +160,16 @@ for frame = 1:nFrames
     end
     
     %--- update screen
-    VBLTimestamp = Screen('Flip',display.windowPtr);
+    if strcmpi(params.sensoryDomain, 'motor')
+        if any(frame == imgChangeIdx)
+            VBLTimestamp = Screen('Flip',display.windowPtr);
+        else
+            %don't change the screen
+        end
+    else
+        VBLTimestamp = Screen('Flip',display.windowPtr);
+    end
+    
     
     % Send trigger, if requested (if stimulus.trigSeq > 0)
     if isfield(stimulus, 'trigSeq') && ~isempty(stimulus.trigSeq) && ...
@@ -170,7 +189,7 @@ for frame = 1:nFrames
     end
     
     if strcmpi(params.sensoryDomain, 'motor')
-       response.glove(frame,:) = sampleDataglove (params.glovePointer); 
+        response.glove(frame,:) = sampleDataglove (params.glovePointer);
     end
     
     % Record the flip time
