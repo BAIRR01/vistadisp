@@ -1,5 +1,5 @@
-function stimulus = createTextures(display, stimulus)
-%stimulus = createTextures(display, stimulus);
+function stimulus = createTextures(params, stimulus)
+%stimulus = createTextures(params, stimulus);
 %
 %Replace images within stimulus (stimulus.image) with textures
 %(stimulus.textures).
@@ -20,20 +20,29 @@ function stimulus = createTextures(display, stimulus)
 
 
 % number of images
-nImages = size(stimulus.images,3);
+if strcmpi(params.sensoryDomain, 'motor')
+    nImages = size(stimulus.images,4);
+else
+    nImages = size(stimulus.images,3);
+end
 stimulus.textures = zeros(nImages, 1);
 
 % make textures
 for imgNum = 1:nImages
-    
-    % fwc:	changed display.screenNumber into display.windowPtr
-    stimulus.textures(imgNum) = ...
-        Screen('MakeTexture',display.windowPtr, ...
-        double(squeeze(stimulus.images(:,:,imgNum,:))));
+    if strcmpi(params.sensoryDomain, 'motor')
+         stimulus.textures(imgNum) = ...
+            Screen('MakeTexture',params.display.windowPtr, ...
+            double(squeeze(stimulus.images(:,:,:,imgNum,:))));
+    else
+        % fwc:	changed display.screenNumber into display.windowPtr
+        stimulus.textures(imgNum) = ...
+            Screen('MakeTexture',params.display.windowPtr, ...
+            double(squeeze(stimulus.images(:,:,imgNum,:))));
+    end
 end
 
 % call/load 'DrawTexture' prior to actual use (clears overhead)
-Screen('DrawTexture', display.windowPtr, stimulus(1).textures(1), ...
+Screen('DrawTexture', params.display.windowPtr, stimulus(1).textures(1), ...
     stimulus(1).srcRect, stimulus(1).dstRect);
 
 return
