@@ -80,16 +80,10 @@ for frame = 1:nFrames
     
     % put in an image
     imgNum = mod(stimulus.seq(frame)-1,nImages)+1;
-    if strcmpi(params.sensoryDomain, 'motor')
-        if any(frame == imgChangeIdx)
-            Screen('DrawTexture', display.windowPtr, stimulus.textures(imgNum), stimulus.srcRect, stimulus.dstRect);
-        else
-            % don't draw a new image
-        end
-    else
+    
         Screen('DrawTexture', display.windowPtr, stimulus.textures(imgNum), stimulus.srcRect, stimulus.dstRect);
         drawFixation(params,stimulus.fixSeq(frame));
-    end
+    
     
     %--- timing
     waitTime = getWaitTime(stimulus, response, frame,  t0, timeFromT0);
@@ -160,16 +154,8 @@ for frame = 1:nFrames
     end
     
     %--- update screen
-    if strcmpi(params.sensoryDomain, 'motor')
-        if any(frame == imgChangeIdx)
-            VBLTimestamp = Screen('Flip',display.windowPtr);
-        else
-            %don't change the screen
-        end
-    else
-        VBLTimestamp = Screen('Flip',display.windowPtr);
-    end
-    
+          VBLTimestamp = Screen('Flip',display.windowPtr);
+        
     
     % Send trigger, if requested (if stimulus.trigSeq > 0)
     if isfield(stimulus, 'trigSeq') && ~isempty(stimulus.trigSeq) && ...
