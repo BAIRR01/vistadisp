@@ -1,4 +1,4 @@
-function [params, quitProg] = checkforSensoryDomainSpecificRequest(params)
+function [params] = checkforSensoryDomainSpecificRequest(params)
 
 % See if we need to initialize the data glove (NOTE Should this go in
 % a site/domainspecific function?
