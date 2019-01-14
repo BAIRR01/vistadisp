@@ -4,7 +4,7 @@
 % Calibrate display?
 prompt = {'y/n'};
 defaults = {'n'};
-answer = inputdlg(prompt, 'Calibrate display?', 1, defaults);
+answer = inputdlg(prompt, 'Calibrate display?', [1 50], defaults);
 if strcmpi(answer, 'y')
     numMeasures = 17; % ideally, 2^n+1 acc to PTB    
     
