@@ -9,14 +9,14 @@ switch lower(params.sensoryDomain)
         
         try params.glovePointer = initializeDataGlove;
         catch ME
-           %warning(ME.identifier, ME.message)
-           %str = input('Failure to initialize data glove. Continue anyway? (y/n)', 's');
-%            if strcmpi(str, 'y')
-%                params.glovePointer = NaN; 
-%            else
-%                quitProg = true; return; 
-%            end
-
+            %warning(ME.identifier, ME.message)
+            %str = input('Failure to initialize data glove. Continue anyway? (y/n)', 's');
+            %            if strcmpi(str, 'y')
+            %                params.glovePointer = NaN;
+            %            else
+            %                quitProg = true; return;
+            %            end
+            
             % Continue without dataglove?
             prompt = {'Continue anyway? (y/n)'};
             defaults = {'y'};
@@ -25,9 +25,14 @@ switch lower(params.sensoryDomain)
                 params.glovePointer = NaN;
                 disp('Continuing without data glove...')
             else
-                %quitProg = true; return; 
+                %quitProg = true; return;
                 return;
-            end                
+            end
+        end
+        if  contains (params.modality, 'ecog','IgnoreCase',true)
+            
+            params.calibration      = 'BAIR_ACER';
+                       
         end
         
     case 'tactile'
