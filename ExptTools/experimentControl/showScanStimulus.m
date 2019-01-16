@@ -80,9 +80,13 @@ for frame = 1:nFrames
     
     % put in an image
     imgNum = mod(stimulus.seq(frame)-1,nImages)+1;
-    
+    % draw fixation if stimulus.fixseq is not 0
+    if stimulus.fixSeq(frame) == 0
+        Screen('DrawTexture', display.windowPtr, stimulus.textures(imgNum), stimulus.srcRect, stimulus.dstRect);
+    else
         Screen('DrawTexture', display.windowPtr, stimulus.textures(imgNum), stimulus.srcRect, stimulus.dstRect);
         drawFixation(params,stimulus.fixSeq(frame));
+    end
     
     
     %--- timing
