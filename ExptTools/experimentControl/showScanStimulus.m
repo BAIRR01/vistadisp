@@ -178,7 +178,7 @@ for frame = 1:nFrames
         end
     end
     
-    if strcmpi(params.sensoryDomain, 'motor') && ~isnan(params.glovePointer)
+    if strcmpi(params.sensoryDomain, 'motor') && ~isNull(params.glovePointer)
         response.glove(frame,:) = sampleDataglove (params.glovePointer);
     end
     
