@@ -7,7 +7,9 @@ quitProg = false;
 switch lower(params.sensoryDomain)
     case 'motor'
         
-        try params.glovePointer = initializeDataGlove;
+        try 
+            params.glovePointer = initializeDataGlove;
+            params.useDataGlove = true;
         catch ME
             %warning(ME.identifier, ME.message)
             %str = input('Failure to initialize data glove. Continue anyway? (y/n)', 's');
@@ -22,7 +24,7 @@ switch lower(params.sensoryDomain)
             defaults = {'y'};
             answer = inputdlg(prompt, 'Failure to initialize data glove ', [1 50], defaults);
             if strcmpi(answer, 'y')
-                params.glovePointer = NaN;
+                params.useDataGlove = false;
                 disp('Continuing without data glove...')
             else
                 %quitProg = true; return;

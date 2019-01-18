@@ -13,6 +13,6 @@ function displayID = closeScreen(displayID)
 if(isfield(displayID,'oldGamma') & ~isempty(displayID.oldGamma))
     Screen('LoadNormalizedGammaTable', displayID.screenNumber, displayID.oldGamma);
 end
-Screen('CloseAll');
+sca;
 displayID.windowPtr = [];
 ShowCursor;
