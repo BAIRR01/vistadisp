@@ -182,7 +182,7 @@ for frame = 1:nFrames
     
     if contains(params.sensoryDomain,'tactile','IgnoreCase',true) && frame == 1
         % present the tactile stimulus
-         VTS_presentStimulus(params.VTSDevice);
+         presentVibrotactileStimulus(params.VTSDevice);
     end
     
     % Record the flip time
