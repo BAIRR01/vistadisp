@@ -7,7 +7,7 @@ quitProg = false;
 switch lower(params.sensoryDomain)
     case 'motor'
         
-        try 
+        try
             params.glovePointer = initializeDataGlove;
             params.useDataGlove = true;
         catch ME
@@ -32,13 +32,19 @@ switch lower(params.sensoryDomain)
             end
         end
         if  contains (params.modality, 'ecog','IgnoreCase',true)
-            
             params.calibration      = 'BAIR_ACER';
-                       
+            
         end
         
     case 'tactile'
-        % put any initialization of VTS here?
+        stimPath = fullfile(vistadispRootPath, 'StimFiles', params.loadMatrix);
+        load(stimPath, 'stimulus');
+  
+        % Initialize the vibrotactile device
+        params = setupVibrotactileDevice(stimulus.NIdaqRate, stimulus.NIdaqNames, stimulus.numOfStimulators);
+        queueOutputData(params.VTSDevice, stimulus.vibrotactileStimulus);
+        
+        clear stimulus
     otherwise
         % do nothing
 end

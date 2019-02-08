@@ -64,8 +64,6 @@ response.secs = zeros(size(stimulus.seq));        % timing
 quitProg = 0;
 response.flip = [];
 response.glove = zeros(length(stimulus.seq), 5);
-imgChangeIdx = find(diff(stimulus.seq)~= 0); %frames when images change
-
 
 % go
 HideCursor();
@@ -158,8 +156,8 @@ for frame = 1:nFrames
     end
     
     %--- update screen
-          VBLTimestamp = Screen('Flip',display.windowPtr);
-        
+    VBLTimestamp = Screen('Flip',display.windowPtr);
+    
     
     % Send trigger, if requested (if stimulus.trigSeq > 0)
     if isfield(stimulus, 'trigSeq') && ~isempty(stimulus.trigSeq) && ...
@@ -180,6 +178,11 @@ for frame = 1:nFrames
     
     if params.useDataGlove
         response.glove(frame,:) = sampleDataglove (params.glovePointer);
+    end
+    
+    if contains(params.sensoryDomain,'tactile','IgnoreCase',true) && frame == 1
+        % present the tactile stimulus
+         VTS_presentStimulus(params.VTSDevice);
     end
     
     % Record the flip time
