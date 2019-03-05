@@ -41,7 +41,7 @@ switch lower(params.sensoryDomain)
         load(stimPath, 'stimulus');
   
         % Initialize the vibrotactile device
-        params = setupVibrotactileDevice(stimulus.NIdaqRate, stimulus.NIdaqNames, stimulus.numOfStimulators);
+        params = setupVibrotactileDevice(stimulus.NIdaqRate, stimulus.NIdaqNames, stimulus.numOfStimulators,params);
         queueOutputData(params.VTSDevice, stimulus.vibrotactileStimulus);
         
         clear stimulus

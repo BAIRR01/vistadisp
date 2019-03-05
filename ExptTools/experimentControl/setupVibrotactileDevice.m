@@ -1,4 +1,4 @@
-function params = setupVibrotactileDevice(NIdaqRate, NIdaqNames, numOfStimulators)
+function params = setupVibrotactileDevice(NIdaqRate, NIdaqNames, numOfStimulators,params)
 % sets up the NIdaq device with number of channels equal to nrStimulators
 % setupVibrotactileDevice (VTSOptions)
 %
@@ -21,16 +21,16 @@ end
 VTSDevice       = daq.createSession('ni');
 VTSDevice.Rate  = NIdaqRate; % Rate of operation (scans/s)
 
-% DAQ names (each can run up to 10 stimulators)
-NIdaqName = NIdaqNames{1};
-
-% Add all the output channels to the session
-for ii = 0:(numOfStimulators-1)
-    stimName = sprintf('ao%d', ii);
-    addAnalogOutputChannel(VTSDevice, NIdaqName, stimName, 'Voltage');
-end
-
-params.VTSDevice = VTSDevice;
-fprintf('\nNIdaq box successfully initialized\n\n')
-
+for dd = 1:length(NIdaqNames)
+    % DAQ names (each can run up to 10 stimulators)
+    NIdaqName = NIdaqNames{dd};
+    
+    % Add all the output channels to the session
+    for ii = 0:(numOfStimulators-1)
+        stimName = sprintf('ao%d', ii);
+        addAnalogOutputChannel(VTSDevice, NIdaqName, stimName, 'Voltage');
+    end
+end   
+    params.VTSDevice = VTSDevice;
+    fprintf('\nNIdaq box successfully initialized\n\n')
 end
