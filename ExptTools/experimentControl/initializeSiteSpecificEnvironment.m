@@ -1,6 +1,8 @@
 function params = initializeSiteSpecificEnvironment(params)
 
-switch lower(params.site)
+switch lower(params.site)    
+    case 'nyu3t'
+        % Do nothing
     case 'nyumeg'
         
         % Initialize eye tracker
@@ -51,7 +53,7 @@ switch lower(params.site)
             params.display.verticalOffset = 0; % pixels (positive means move the box higher)
         end 
      
-    case 'umcecog'
+    case {'umcecog' 'umcor'}
         
         % necessary to run the correct mex files on windows for
         % psychtoolbox
@@ -74,6 +76,10 @@ switch lower(params.site)
             params.siteSpecific.port_triggers = portName;
         else
             params.siteSpecific.port_triggers = -1;
+        end
+        
+        if strcmpi(params.site, 'umcor')
+            params.quitProgKey = 'ESCAPE';
         end
         
     otherwise
