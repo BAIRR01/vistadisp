@@ -63,7 +63,11 @@ switch lower(params.site)
         COM_PORT_BTNBOX = 'COM5';
         
         if ~isempty(COM_PORT_BTNBOX)
-            params.siteSpecific.port = deviceUMC('open', COM_PORT_BTNBOX);
+            try
+                params.siteSpecific.port = deviceUMC('open', COM_PORT_BTNBOX);
+            catch
+                params.siteSpecific.port = -1; % deviceUMC('open',portName);
+            end
         else
             params.siteSpecific.port = -1; % deviceUMC('open',portName);
         end
@@ -71,15 +75,19 @@ switch lower(params.site)
         % Triggers Serial Port
         COM_PORT_TRIGGERS = 'COM6';
         if ~isempty(COM_PORT_TRIGGERS)
-            portName = serial(COM_PORT_TRIGGERS);
-            fopen(portName);
-            params.siteSpecific.port_triggers = portName;
+            try
+                portName = serial(COM_PORT_TRIGGERS);
+                fopen(portName);
+                params.siteSpecific.port_triggers = portName;
+            catch
+                params.siteSpecific.port_triggers = -1; % deviceUMC('open',portName);
+            end
         else
             params.siteSpecific.port_triggers = -1;
         end
         
         if strcmpi(params.site, 'umcor')
-            params.quitProgKey = 'ESCAPE';
+            params.quitProgKey = '1';
         end
         
     otherwise
