@@ -172,9 +172,13 @@ for frame = 1:nFrames
                 thisCode = sprintf('%4.0d', stimulus.trigSeq(frame));
                 NetStation('Event', thisCode,VBLTimestamp);
             case 'umcecog'
-                fprintf(params.siteSpecific.port_triggers, '%c', stimulus.trigSeq(frame));
+                if params.siteSpecific.port_triggers ~= -1
+                    fprintf(params.siteSpecific.port_triggers, '%c', stimulus.trigSeq(frame));
+                end
             case 'umcor'
-                fprintf(params.siteSpecific.port_triggers, '%c', 1);
+                if params.siteSpecific.port_triggers ~= -1
+                    fprintf(params.siteSpecific.port_triggers, '%c', 1);
+                end
         end
     end
     
