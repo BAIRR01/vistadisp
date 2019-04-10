@@ -59,7 +59,7 @@ try
     Screen('BlendFunction', params.display.windowPtr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     % Store the images in textures
-    stimulus = createTextures(params.display,stimulus);
+    stimulus = createTextures(params,stimulus);
         
     % set priority
     Priority(params.runPriority);

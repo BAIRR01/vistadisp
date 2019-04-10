@@ -1,10 +1,17 @@
+function NYU_ECOG_Cal(sensoryDomain)
+if contains(sensoryDomain, {'motor', 'tactile'}, 'IgnoreCase', true)
+    display = 'BAIR_ACER';
+else
+    display = 'SoMMacBook';
+end
+
 % For the NYU ECoG site, we may want to calibrate the display for each
 % patient, since the ambient illumination varies from room to room.
 
 % Calibrate display?
 prompt = {'y/n'};
 defaults = {'n'};
-answer = inputdlg(prompt, 'Calibrate display?', 1, defaults);
+answer = inputdlg(prompt, 'Calibrate display?', [1 50], defaults);
 if strcmpi(answer, 'y')
     numMeasures = 17; % ideally, 2^n+1 acc to PTB    
     
@@ -25,9 +32,9 @@ if strcmpi(answer, 'y')
     gammaTable = round(gamma * 255);
     
     % where to save?
-    pth = fullfile(getDisplayPath, 'SoMMacBook', sprintf('gamma_%s', datestr(now, 30)));
+    pth = fullfile(getDisplayPath, display, sprintf('gamma_%s', datestr(now, 30)));
     save(pth, 'gamma', 'gammaTable');
-    pth = fullfile(getDisplayPath, 'SoMMacBook', 'gamma');
+    pth = fullfile(getDisplayPath, display, 'gamma');
     save(pth, 'gamma', 'gammaTable');
 else
     disp('Not calibrating...')

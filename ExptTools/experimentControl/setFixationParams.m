@@ -40,7 +40,7 @@ switch lower(params.fixation)
             ];          
         
         
-    case 'cross'        
+    case {'cross' 'crossdisk'}
         
         % First, find the points on a cross whose center is defined by
         %  (params.display.fixX, params.display.fixY) and whose length is
@@ -54,8 +54,14 @@ switch lower(params.fixation)
         % Then specify the size of the dots making up the lines (ie the
         % thickness of the lines in pixels)
         params.display.fixSizeAngle  = 0.03;
-        params.display.fixSizePixels = ceil(angle2pix(params.display,params.display.fixSizeAngle));
         
+        if strcmp(params.fixation, 'cross')
+            params.display.fixSizePixels = ceil(angle2pix(params.display,params.display.fixSizeAngle));
+        else
+            params.display.fixSizePixels(2) = ceil(angle2pix(params.display,params.display.fixSizeAngle));
+        end
+        
+   
     otherwise
         error('Unknown fixationType!');
 end

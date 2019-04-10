@@ -63,6 +63,7 @@ response.keyCode = zeros(length(stimulus.seq),1); % get 1 buttons max
 response.secs = zeros(size(stimulus.seq));        % timing
 quitProg = 0;
 response.flip = [];
+response.glove = zeros(length(stimulus.seq), 5);
 
 % go
 HideCursor();
@@ -77,8 +78,14 @@ for frame = 1:nFrames
     
     % put in an image
     imgNum = mod(stimulus.seq(frame)-1,nImages)+1;
-    Screen('DrawTexture', display.windowPtr, stimulus.textures(imgNum), stimulus.srcRect, stimulus.dstRect);
-    drawFixation(params,stimulus.fixSeq(frame));
+    % draw fixation if stimulus.fixseq is not 0
+    if stimulus.fixSeq(frame) == 0
+        Screen('DrawTexture', display.windowPtr, stimulus.textures(imgNum), stimulus.srcRect, stimulus.dstRect);
+    else
+        Screen('DrawTexture', display.windowPtr, stimulus.textures(imgNum), stimulus.srcRect, stimulus.dstRect);
+        drawFixation(params,stimulus.fixSeq(frame));
+    end
+    
     
     %--- timing
     waitTime = getWaitTime(stimulus, response, frame,  t0, timeFromT0);
@@ -109,8 +116,8 @@ for frame = 1:nFrames
                 str = str{1};
             end
             str = str(1);
-
-            switch str                
+            
+            switch str
                 case quitProgKey
                     % Quit the experiment gracefully
                     quitProg = 1;
@@ -121,15 +128,15 @@ for frame = 1:nFrames
                         case {'nyu3t'}
                             % do nothing as this is the trigger key from the scanner
                         otherwise
-                             % record the subject response
+                            % record the subject response
                             response.keyCode(frame) = str;
-                            response.secs(frame)    = ssSecs - t0;  
+                            response.secs(frame)    = ssSecs - t0;
                     end
                     
                 otherwise
                     % record the subject response
                     response.keyCode(frame) = str;
-                    response.secs(frame)    = ssSecs - t0;                                        
+                    response.secs(frame)    = ssSecs - t0;
             end
         end
         
@@ -151,6 +158,7 @@ for frame = 1:nFrames
     %--- update screen
     VBLTimestamp = Screen('Flip',display.windowPtr);
     
+    
     % Send trigger, if requested (if stimulus.trigSeq > 0)
     if isfield(stimulus, 'trigSeq') && ~isempty(stimulus.trigSeq) && ...
             stimulus.trigSeq(frame) > 0
@@ -168,6 +176,15 @@ for frame = 1:nFrames
             case 'umcor'
                 fprintf(params.siteSpecific.port_triggers, '%c', 1);
         end
+    end
+    
+    if params.useDataGlove
+        response.glove(frame,:) = sampleDataglove (params.glovePointer);
+    end
+    
+    if contains(params.sensoryDomain,'tactile','IgnoreCase',true) && frame == 1
+        % present the tactile stimulus
+         presentVibrotactileStimulus(params.VTSDevice);
     end
     
     % Record the flip time

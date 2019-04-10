@@ -28,6 +28,15 @@ switch lower(params.fixation)
         % fixSizePixels is the thickness of the two lines defining cross
         Screen('DrawDots', d.windowPtr, d.fixCoords, d.fixSizePixels, d.fixColorRgb(colIndex,:));
              
+    case 'crossdisk'      
+        % fixCoords are the points defining the two lines of the cross
+        % fixSizePixels is the thickness of the two lines defining cross
+        if colIndex == 1
+            Screen('DrawDots', d.windowPtr, d.fixCoords, d.fixSizePixels(2), d.fixColorRgb(colIndex,:));
+        else
+            Screen('glPoint', d.windowPtr, d.fixColorRgb(colIndex,:), d.fixX, d.fixY, d.fixSizePixels(1));
+        end
+
     otherwise
         error('Unknown fixationType!');
 end
