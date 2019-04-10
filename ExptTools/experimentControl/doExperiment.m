@@ -146,7 +146,7 @@ try
             case {'umc7t' 'umc3t'}
                 deviceUMC('close', params.siteSpecific.port);
                 
-            case 'umcecog'
+            case {'umcecog' 'umcor'}
                 deviceUMC('close', params.siteSpecific.port);
                 fclose(params.siteSpecific.port_triggers);
                 
@@ -173,7 +173,7 @@ catch ME
             case {'umc7t' 'umc3t'}
                 deviceUMC('close', params.siteSpecific.port);
                 
-            case 'umcecog'
+            case {'umcecog' 'umcor'}
                 deviceUMC('close', params.siteSpecific.port);
                 fclose(params.siteSpecific.port_triggers);
                 
