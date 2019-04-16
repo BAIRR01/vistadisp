@@ -39,7 +39,7 @@ try
         
     % Open the screen
     params.display = openScreen(params.display);
-    
+
     if params.useEyeTracker
           global PTBTheWindowPtr
           PTBTheWindowPtr = params.display.windowPtr;
@@ -147,9 +147,12 @@ try
                 deviceUMC('close', params.siteSpecific.port);
                 
             case {'umcecog' 'umcor'}
-                deviceUMC('close', params.siteSpecific.port);
-                fclose(params.siteSpecific.port_triggers);
-                
+                if params.siteSpecific.port ~= -1
+                    deviceUMC('close', params.siteSpecific.port);
+                end
+                if params.siteSpecific.port_triggers ~= -1
+                    fclose(params.siteSpecific.port_triggers);
+                end              
         end
     end
     if params.useEyeTracker
@@ -174,9 +177,12 @@ catch ME
                 deviceUMC('close', params.siteSpecific.port);
                 
             case {'umcecog' 'umcor'}
-                deviceUMC('close', params.siteSpecific.port);
-                fclose(params.siteSpecific.port_triggers);
-                
+                if params.siteSpecific.port ~= -1
+                    deviceUMC('close', params.siteSpecific.port);
+                end
+                if params.siteSpecific.port_triggers ~= -1
+                    fclose(params.siteSpecific.port_triggers);
+                end      
         end
     end
     if params.useEyeTracker
