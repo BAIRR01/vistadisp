@@ -1,4 +1,4 @@
-function stimulus = createTextures(params, stimulus)
+function [params, stimulus] = createTextures(params, stimulus)
 %stimulus = createTextures(params, stimulus);
 %
 %Replace images within stimulus (stimulus.image) with textures
@@ -20,7 +20,7 @@ function stimulus = createTextures(params, stimulus)
 
 
 % number of images
-if strcmpi(params.sensoryDomain, 'motor')
+if strcmpi(params.sensoryDomain, 'motor') || strcmpi(params.sensoryDomain, 'tactile-visual')
     nImages = size(stimulus.images,4);
 else
     nImages = size(stimulus.images,3);
@@ -29,8 +29,8 @@ stimulus.textures = zeros(nImages, 1);
 
 % make textures
 for imgNum = 1:nImages
-    if strcmpi(params.sensoryDomain, 'motor')
-         stimulus.textures(imgNum) = ...
+    if strcmpi(params.sensoryDomain, 'motor') || strcmpi(params.sensoryDomain, 'tactile-visual')
+        stimulus.textures(imgNum) = ...
             Screen('MakeTexture',params.display.windowPtr, ...
             (stimulus.images(:,:,:,imgNum,:)));
     else
@@ -44,5 +44,10 @@ end
 % call/load 'DrawTexture' prior to actual use (clears overhead)
 Screen('DrawTexture', params.display.windowPtr, stimulus(1).textures(1), ...
     stimulus(1).srcRect, stimulus(1).dstRect);
+
+if strcmpi(params.sensoryDomain, 'tactile-visual')
+    % convert hand image into a texture
+    params.display.handImageTexture = Screen('MakeTexture', params.display.windowPtr, params.display.handImage);
+end
 
 return

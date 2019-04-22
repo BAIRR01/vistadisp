@@ -60,7 +60,17 @@ switch lower(params.fixation)
         else
             params.display.fixSizePixels(2) = ceil(angle2pix(params.display,params.display.fixSizeAngle));
         end
+    
+    case 'hand'
+        % image presentation rectangles
+        params.display.handImageDims = stimulus.handImageDims;
+        params.display.handImageCoords = CenterRectOnPointd(params.display.handImageDims, params.display.fixX, params.display.fixY);
         
+        % load the hand image
+        [params.display.handImage,~,alpha] = imread(stimulus.handImagePath);
+        % add alpha values to the image
+        params.display.handImage(:, :, 4) = alpha;
+
    
     otherwise
         error('Unknown fixationType!');

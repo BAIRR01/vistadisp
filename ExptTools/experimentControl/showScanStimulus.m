@@ -69,18 +69,28 @@ response.glove = zeros(length(stimulus.seq), 5);
 HideCursor();
 fprintf('[%s]:Running. Hit %s to quit.\n',mfilename, quitProgKey);
 
+if contains(params.sensoryDomain,'tactile','IgnoreCase',true)
+    % present the tactile stimulus
+    presentVibrotactileStimulus(params.VTSDevice);
+end
+
+%initialize counter
+frame = 1;
+
 for frame = 1:nFrames
     
     %--- update display
     % If the sequence number is positive, draw the stimulus and the
     % fixation.  If the sequence number is negative, draw only the
     % fixation.
-    
     % put in an image
     imgNum = mod(stimulus.seq(frame)-1,nImages)+1;
     % draw fixation if stimulus.fixseq is not 0
     if stimulus.fixSeq(frame) == 0
         Screen('DrawTexture', display.windowPtr, stimulus.textures(imgNum), stimulus.srcRect, stimulus.dstRect);
+    elseif stimulus.fixSeq(frame) == 55
+        drawFixation(params); %draws hand stimulus
+        Screen('DrawTexture', display.windowPtr, stimulus.textures(imgNum), [], stimulus.dstRect2(frame,:));
     else
         Screen('DrawTexture', display.windowPtr, stimulus.textures(imgNum), stimulus.srcRect, stimulus.dstRect);
         drawFixation(params,stimulus.fixSeq(frame));
@@ -91,6 +101,8 @@ for frame = 1:nFrames
     waitTime = getWaitTime(stimulus, response, frame,  t0, timeFromT0);
     
     %--- get inputs (subject or experimentor)
+    %--- with 10 ms sloptime the loop is not entered at 60 Hz,
+    %    frame-by-frame texture drawing
     while(waitTime<0)
         
         % Check for serial port if we are at UMC-3T or UMC-7T or UMC-ECOG
@@ -121,6 +133,8 @@ for frame = 1:nFrames
                 case quitProgKey
                     % Quit the experiment gracefully
                     quitProg = 1;
+                    frame = nFrames;
+                    fprintf('[%s]:Quit signal received.\n',mfilename);
                     break; % out of while loop
                     
                 case params.triggerKey
@@ -148,13 +162,7 @@ for frame = 1:nFrames
         % timing
         waitTime = getWaitTime(stimulus, response, frame, t0, timeFromT0);
     end
-    
-    %--- stop?
-    if quitProg
-        fprintf('[%s]:Quit signal received.\n',mfilename);
-        break;
-    end
-    
+        
     %--- update screen
     VBLTimestamp = Screen('Flip',display.windowPtr);
     
@@ -186,13 +194,9 @@ for frame = 1:nFrames
         response.glove(frame,:) = sampleDataglove (params.glovePointer);
     end
     
-    if contains(params.sensoryDomain,'tactile','IgnoreCase',true) && frame == 1
-        % present the tactile stimulus
-         presentVibrotactileStimulus(params.VTSDevice);
-    end
-    
     % Record the flip time
     response.flip(frame) = VBLTimestamp;
+    
 end
 
 % that's it

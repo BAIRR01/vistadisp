@@ -6,11 +6,9 @@ function [startTime,endTime] = presentVibrotactileStimulus(VTSDevice)
 fprintf('\nStarting the vibrotactile stimulation\n');
 startTime = GetSecs();
 
-[data,timeStamps,triggerTime] = VTSDevice.startForeground;
+VTSDevice.startBackground;
 
 endTime = GetSecs();
-
-fprintf('\nEnded the vibrotactile stimulation\n');
 
 
 

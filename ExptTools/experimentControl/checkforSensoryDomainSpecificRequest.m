@@ -36,13 +36,14 @@ switch lower(params.sensoryDomain)
             
         end
         
-    case 'tactile'
+    case {'tactile' 'tactile-visual'}
         stimPath = fullfile(vistadispRootPath, 'StimFiles', params.loadMatrix);
         load(stimPath, 'stimulus');
   
         % Initialize the vibrotactile device
         params = setupVibrotactileDevice(stimulus.NIdaqRate, stimulus.NIdaqNames, stimulus.numOfStimulators,params);
         queueOutputData(params.VTSDevice, stimulus.vibrotactileStimulus);
+        prepare(params.VTSDevice);%slightly improve timing
         
         clear stimulus
     otherwise

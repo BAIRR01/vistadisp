@@ -5,6 +5,7 @@ function quitProg = doExperiment(params)
 
 % Set screen params
 params = setScreenParams(params);
+% params.display.screenNumber   =1
 
 % Site-specific settings
 params = initializeSiteSpecificEnvironment(params);
@@ -36,30 +37,30 @@ try
     AssertOpenGL;
     
     Screen('Preference','SkipSyncTests', params.skipSyncTests);
-        
+    
     % Open the screen
     params.display = openScreen(params.display);
-
-    if params.useEyeTracker
-          global PTBTheWindowPtr
-          PTBTheWindowPtr = params.display.windowPtr;
-     
-          PTBInitEyeTracker;
-          % paragraph = {'Eyetracker initialized.','Get ready to calibrate.'};
-          % PTBDisplayParagraph(paragraph, {'center',30}, {'a'});
-          PTBCalibrateEyeTracker;
     
-          % actually starts the recording
-          % name correponding to MEG file (can only be 8 characters!!, no extension)
-          PTBStartEyeTrackerRecording('eyelink');
-          % Q How is the path to the log files set?
+    if params.useEyeTracker
+        global PTBTheWindowPtr
+        PTBTheWindowPtr = params.display.windowPtr;
+        
+        PTBInitEyeTracker;
+        % paragraph = {'Eyetracker initialized.','Get ready to calibrate.'};
+        % PTBDisplayParagraph(paragraph, {'center',30}, {'a'});
+        PTBCalibrateEyeTracker;
+        
+        % actually starts the recording
+        % name correponding to MEG file (can only be 8 characters!!, no extension)
+        PTBStartEyeTrackerRecording('eyelink');
+        % Q How is the path to the log files set?
     end
     
     % to allow blending
     Screen('BlendFunction', params.display.windowPtr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     % Store the images in textures
-    stimulus = createTextures(params,stimulus);
+    [params, stimulus] = createTextures(params,stimulus);
         
     % set priority
     Priority(params.runPriority);
@@ -74,8 +75,9 @@ try
         else, timeFromT0 = false;
         end
         
+        tic
         [response, timing, quitProg] = showScanStimulus(params,stimulus,time0, timeFromT0); %#ok<ASGLU> timing and quitProg key are saved (but not otherwise used)
-        
+        toc
         % After experiment
         
         % Reset priority
@@ -90,18 +92,18 @@ try
         
         % Save path
         pth = fullfile(vistadispRootPath, 'Data');
-       
+        
         % Get current date and time
-        params.experimentDateandTime = datestr(now,30); 
+        params.experimentDateandTime = datestr(now,30);
         % This used to be in the filename but was removed because of BIDS
-        % requirements; now saving it along with the other variables 
+        % requirements; now saving it along with the other variables
         
         % Include a runNumber field to indicate if this is a repeat run of
         % a previously loaded stimulus file
         params.runNumber = params.runID;
         % This number will be updated below if previous instantiations of
         % this run exist in the folder where the data is saved.
-       
+        
         % Generate save name using BIDS naming convention
         fname = sprintf('sub-%s_ses-%s%s_task-%s_run-%d', ...
             params.subjID, params.site, params.sessionID, params.experiment, params.runNumber);
@@ -132,7 +134,7 @@ try
             writetable(stimulus.tsv, fullfile(pth, sprintf('%s.tsv', fname)), ...
                 'FileType','text', 'Delimiter', '\t')
         end
-   
+        
     end
     
     % Close the one on-screen and many off-screen windows
@@ -152,7 +154,7 @@ try
                 end
                 if params.siteSpecific.port_triggers ~= -1
                     fclose(params.siteSpecific.port_triggers);
-                end              
+                end
         end
     end
     if params.useEyeTracker
@@ -167,7 +169,7 @@ try
         %movefile('eyelink.edf', [destination num2str(i) '.edf'])
         movefile('eyelink.edf', fullfile(pth, [destination num2str(i) '.edf']));
     end
-
+    
 catch ME
     % Clean up if error occurred
     if params.useSerialPort
@@ -182,15 +184,15 @@ catch ME
                 end
                 if params.siteSpecific.port_triggers ~= -1
                     fclose(params.siteSpecific.port_triggers);
-                end      
+                end
         end
     end
     if params.useEyeTracker
-        PTBStopEyeTrackerRecording; 
+        PTBStopEyeTrackerRecording;
     end
     Screen('CloseAll');
     ListenChar(1)
-    setGamma(0); Priority(0); ShowCursor;    
+    setGamma(0); Priority(0); ShowCursor;
     quitProg = true;
     rethrow(ME);
 end

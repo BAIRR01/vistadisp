@@ -37,6 +37,12 @@ switch lower(params.fixation)
             Screen('glPoint', d.windowPtr, d.fixColorRgb(colIndex,:), d.fixX, d.fixY, d.fixSizePixels(1));
         end
 
+    case 'hand'
+        % draw the hand image to the screen
+        Screen('DrawTexture', d.windowPtr, d.handImageTexture, [], d.handImageCoords);
+        %draw fixation mark in the center of the screen
+        Screen('DrawText', d.windowPtr, '+', d.fixX, d.fixY+10, [100, 100, 100]);
+        
     otherwise
         error('Unknown fixationType!');
 end
