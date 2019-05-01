@@ -133,8 +133,6 @@ for frame = 1:nFrames
                 case quitProgKey
                     % Quit the experiment gracefully
                     quitProg = 1;
-                    frame = nFrames;
-                    fprintf('[%s]:Quit signal received.\n',mfilename);
                     break; % out of while loop
                     
                 case params.triggerKey
@@ -161,6 +159,11 @@ for frame = 1:nFrames
         
         % timing
         waitTime = getWaitTime(stimulus, response, frame, t0, timeFromT0);
+    end
+    
+    if quitProg
+        fprintf('[%s]:Quit signal received.\n',mfilename);
+        break;
     end
         
     %--- update screen
