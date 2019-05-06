@@ -68,6 +68,8 @@ response.glove = zeros(length(stimulus.seq), 5);
 % go
 HideCursor();
 fprintf('[%s]:Running. Hit %s to quit.\n',mfilename, quitProgKey);
+
+% for screenshots
 tic;
 
 if contains(params.sensoryDomain,'tactile','IgnoreCase',true)
@@ -170,9 +172,13 @@ for frame = 1:nFrames
     %--- update screen
     VBLTimestamp = Screen('Flip',display.windowPtr);
     imageArray = Screen('GetImage', display.windowPtr);
-    i_image = toc;
-    imwrite(imageArray, sprintf('C:/Users/subjects/Downloads/video/im%012.f.jpg', i_image*10e6), 'jpg');
-        
+
+    % take screenshot
+    if isfield(stimulus, 'path_for_screenshots') && ~isempty(stimulus.path_for_screenshots)
+        image_onset = toc;
+        screenshot_file = sprintf('img%012.f.jpg', image_onset * 10e6);
+        imwrite(imageArray, fullfile(stimulus.path_for_screenshots,  screenshot_file, 'jpg');
+    end
     
     % Send trigger, if requested (if stimulus.trigSeq > 0)
     if isfield(stimulus, 'trigSeq') && ~isempty(stimulus.trigSeq) && ...
