@@ -68,6 +68,7 @@ response.glove = zeros(length(stimulus.seq), 5);
 % go
 HideCursor();
 fprintf('[%s]:Running. Hit %s to quit.\n',mfilename, quitProgKey);
+tic;
 
 if contains(params.sensoryDomain,'tactile','IgnoreCase',true)
     % present the tactile stimulus
@@ -168,7 +169,10 @@ for frame = 1:nFrames
         
     %--- update screen
     VBLTimestamp = Screen('Flip',display.windowPtr);
-    
+    imageArray = Screen('GetImage', display.windowPtr);
+    i_image = toc;
+    imwrite(imageArray, sprintf('C:/Users/subjects/Downloads/video/im%012.f.jpg', i_image*10e6), 'jpg');
+        
     
     % Send trigger, if requested (if stimulus.trigSeq > 0)
     if isfield(stimulus, 'trigSeq') && ~isempty(stimulus.trigSeq) && ...
