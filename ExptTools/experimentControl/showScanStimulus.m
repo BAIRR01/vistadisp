@@ -177,7 +177,7 @@ for frame = 1:nFrames
     if isfield(stimulus, 'path_for_screenshots') && ~isempty(stimulus.path_for_screenshots)
         image_onset = toc;
         screenshot_file = sprintf('img%012.f.jpg', image_onset * 10e6);
-        imwrite(imageArray, fullfile(stimulus.path_for_screenshots,  screenshot_file, 'jpg');
+        imwrite(imageArray, fullfile(stimulus.path_for_screenshots,  screenshot_file, 'jpg'));
     end
     
     % Send trigger, if requested (if stimulus.trigSeq > 0)
