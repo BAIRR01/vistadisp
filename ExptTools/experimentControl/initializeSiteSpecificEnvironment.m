@@ -1,5 +1,7 @@
 function params = initializeSiteSpecificEnvironment(params)
 
+BAUDRATE_UMCUECOG = 115200;
+
 switch lower(params.site)    
     case 'nyu3t'
         % Do nothing
@@ -76,7 +78,7 @@ switch lower(params.site)
         COM_PORT_TRIGGERS = 'COM6';
         if ~isempty(COM_PORT_TRIGGERS)
             try
-                portName = serial(COM_PORT_TRIGGERS);
+                portName = serial(COM_PORT_TRIGGERS, 'BaudRate', BAUDRATE_UMCUECOG);
                 fopen(portName);
                 params.siteSpecific.port_triggers = portName;
             catch
