@@ -22,7 +22,7 @@ params   = setFixationParams(params, stimulus);
 % overwriting text in scripts. But it is dangerous because if the code
 % quits prematurely, the user may be left unable to type in the command
 % window. Command window access can be restored by control-C.
-ListenChar(2);
+ListenChar(2); 
 
 % loading mex functions for the first time can be
 % extremely slow (seconds!), so we want to make sure that
@@ -59,6 +59,12 @@ try
     % to allow blending
     Screen('BlendFunction', params.display.windowPtr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
+    % Specify the photodiode square here        
+    if params.usePhotoDiode
+       rect = params.display.rect;
+       params.siteSpecific.trigRect = [rect(3)*0.92 rect(4)*0.91 rect(3)*.98 rect(4)*.99];
+    end
+
     % Store the images in textures
     [params, stimulus] = createTextures(params,stimulus);
         

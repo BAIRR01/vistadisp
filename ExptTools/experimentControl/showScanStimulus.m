@@ -165,10 +165,19 @@ for frame = 1:nFrames
         fprintf('[%s]:Quit signal received.\n',mfilename);
         break;
     end
-        
+    
+    % update photodiode
+    if params.usePhotoDiode
+        if isfield(stimulus, 'trigSeq') && ~isempty(stimulus.trigSeq) && ...
+            stimulus.trigSeq(frame) > 0
+            Screen('FillRect',display.windowPtr, 0, params.siteSpecific.trigRect); % black photodiode trigger
+        else
+            Screen('FillRect',display.windowPtr, 255, params.siteSpecific.trigRect); % white photodiode trigger
+        end
+    end
+    
     %--- update screen
     VBLTimestamp = Screen('Flip',display.windowPtr);
-    
     
     % Send trigger, if requested (if stimulus.trigSeq > 0)
     if isfield(stimulus, 'trigSeq') && ~isempty(stimulus.trigSeq) && ...
