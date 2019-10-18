@@ -20,7 +20,7 @@ function [params, stimulus] = createTextures(params, stimulus)
 
 
 % number of images
-if strcmpi(params.sensoryDomain, 'motor') || strcmpi(params.sensoryDomain, 'tactile-visual')
+if strcmpi(params.sensoryDomain, 'motor') || strcmpi(params.sensoryDomain, 'tactile-visual') || contains(params.experiment, {'sixcatloc', 'objectdetection'})
     nImages = size(stimulus.images,4);
 else
     nImages = size(stimulus.images,3);
@@ -29,7 +29,7 @@ stimulus.textures = zeros(nImages, 1);
 
 % make textures
 for imgNum = 1:nImages
-    if strcmpi(params.sensoryDomain, 'motor') || strcmpi(params.sensoryDomain, 'tactile-visual')
+    if strcmpi(params.sensoryDomain, 'motor') || strcmpi(params.sensoryDomain, 'tactile-visual') || contains(params.experiment, {'sixcatloc', 'objectdetection'})
         stimulus.textures(imgNum) = ...
             Screen('MakeTexture',params.display.windowPtr, ...
             (stimulus.images(:,:,:,imgNum,:)));
