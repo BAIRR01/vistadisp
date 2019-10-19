@@ -11,8 +11,8 @@ params.display.fixY = (stimulus.dstRect(2)+stimulus.dstRect(4))/2;
 params.display.fixSizeAngle  = 0.30;
 params.display.fixSizePixels = round(angle2pix(params.display,params.display.fixSizeAngle));
 
-% Default colors are red and green ([R G B Alpha])
-params.display.fixColorRgb   = [255 0 0 255; 0 255 0 255]; 
+% Default colors are red and green ([R G B Alpha]); 3 is black
+params.display.fixColorRgb   = [255 0 0 255; 0 255 0 255; 0 0 0 255]; 
 
 % Time within which a response is required for a detection to count as
 %   correct
