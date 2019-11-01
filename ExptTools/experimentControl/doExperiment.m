@@ -22,7 +22,7 @@ params   = setFixationParams(params, stimulus);
 % overwriting text in scripts. But it is dangerous because if the code
 % quits prematurely, the user may be left unable to type in the command
 % window. Command window access can be restored by control-C.
-ListenChar(2); 
+ListenChar(2);
 
 % loading mex functions for the first time can be
 % extremely slow (seconds!), so we want to make sure that
@@ -32,6 +32,12 @@ KbCheck;GetSecs;WaitSecs(0.001);
 try
     % Turn off screen warnings
     Screen('Preference','VisualDebugLevel', 0);
+    
+    % turn to low level text rendering as nothing else works on Windows
+    % with newest psychtoolbox version
+    if ispc
+        Screen('Preference', 'TextRenderer', 0);
+    end
     
     % check for OpenGL
     AssertOpenGL;
@@ -59,20 +65,20 @@ try
     % to allow blending
     Screen('BlendFunction', params.display.windowPtr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
-    % Specify the photodiode square here        
+    % Specify the photodiode square here
     if params.usePhotoDiode
-       rect = params.display.rect;
-       params.siteSpecific.trigRect = [rect(3)*0.92 rect(4)*0.91 rect(3)*.98 rect(4)*.99];
+        rect = params.display.rect;
+        params.siteSpecific.trigRect = [rect(3)*0.92 rect(4)*0.91 rect(3)*.98 rect(4)*.99];
     end
-
+    
     % Store the images in textures
     [params, stimulus] = createTextures(params,stimulus);
-        
+    
     % set priority
     Priority(params.runPriority);
     
     % wait for go signal
-    [time0, quitProg] = pressKey2Begin(params); 
+    [time0, quitProg] = pressKey2Begin(params);
     
     if ~quitProg
         % Do the experiment!
