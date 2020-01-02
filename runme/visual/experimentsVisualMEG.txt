@@ -18,7 +18,7 @@ spatialpattern_1
 spatialpattern_2
 spatialpattern_1
 spatialpattern_2
-hrfpattern_run1
+hrfpattern_1
 spatialobject_1
 spatialobject_2
 spatialobject_1

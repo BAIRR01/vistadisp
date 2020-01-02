@@ -56,7 +56,8 @@ global currFreq;
 PTBInitSound(1);
 
 % Get the data
-[y, freq] = wavread(soundfile);
+% [y, freq] = wavread(soundfile);
+[y, freq] = audioread(soundfile);
 wavedata = y';
 nrchannels = size(wavedata,1); % Number of rows == number of channels.
 

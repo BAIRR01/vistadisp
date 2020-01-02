@@ -33,6 +33,12 @@ try
     % Turn off screen warnings
     Screen('Preference','VisualDebugLevel', 0);
     
+    % turn to low level text rendering as nothing else works on Windows
+    % with newest psychtoolbox version
+    if ispc
+        Screen('Preference', 'TextRenderer', 0);
+    end
+    
     % check for OpenGL
     AssertOpenGL;
     
@@ -46,6 +52,7 @@ try
         PTBTheWindowPtr = params.display.windowPtr;
         
         PTBInitEyeTracker;
+        
         % paragraph = {'Eyetracker initialized.','Get ready to calibrate.'};
         % PTBDisplayParagraph(paragraph, {'center',30}, {'a'});
         PTBCalibrateEyeTracker;
@@ -54,19 +61,29 @@ try
         % name correponding to MEG file (can only be 8 characters!!, no extension)
         PTBStartEyeTrackerRecording('eyelink');
         % Q How is the path to the log files set?
+        global PTBEyeTrackerInitialized
+        if ~PTBEyeTrackerInitialized
+            params.useEyeTracker = 0;
+        end
     end
     
     % to allow blending
     Screen('BlendFunction', params.display.windowPtr, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
+    % Specify the photodiode square here
+    if params.usePhotoDiode
+        rect = params.display.rect;
+        params.siteSpecific.trigRect = [rect(3)*0.92 rect(4)*0.91 rect(3)*.98 rect(4)*.99];
+    end
+    
     % Store the images in textures
     [params, stimulus] = createTextures(params,stimulus);
-        
+    
     % set priority
     Priority(params.runPriority);
     
     % wait for go signal
-    [time0, quitProg] = pressKey2Begin(params); 
+    [time0, quitProg] = pressKey2Begin(params);
     
     if ~quitProg
         % Do the experiment!

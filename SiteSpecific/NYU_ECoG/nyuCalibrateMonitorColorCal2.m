@@ -1,5 +1,5 @@
 function [ gammaTable1, gammaTable2, displayBaseline, displayRange, displayGamma, maxLevel ] = nyuCalibrateMonitorColorCal2(numMeasures, screenid)
-% [gammaTable1, gammaTable2, displayBaseline, displayRange. displayGamma, maxLevel ] = CalibrateMonitorPhotometer([numMeasures=9][, screenid=max])
+% [gammaTable1, gammaTable2, displayBaseline, displayRange, displayGamma, maxLevel ] = CalibrateMonitorPhotometer([numMeasures=9][, screenid=max])
 %
 % A simple calibration script for using the ColorCal2 photometer
 % Adapted from the native PTB function CalibrateMonitorPhotometer.m
@@ -78,7 +78,7 @@ global inputV;
     vals = (vals - displayBaseline) / displayRange;
     inputV = inputV/maxLevel;
     
-    if ~exist('fittype'); 
+    if ~exist('fittype', 'var') 
         fprintf('This function needs fittype() for automatic fitting. This function is missing on your setup.\n');
         fprintf('Therefore i can''t proceed, but the input values for a curve fit are available to you by\n');
         fprintf('defining "global vals;" and "global inputV" on the command prompt, with "vals" being the displayed\n');

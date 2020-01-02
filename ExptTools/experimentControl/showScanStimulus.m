@@ -165,10 +165,19 @@ for frame = 1:nFrames
         fprintf('[%s]:Quit signal received.\n',mfilename);
         break;
     end
-        
+    
+    % update photodiode
+    if params.usePhotoDiode
+        if isfield(stimulus, 'trigSeq') && ~isempty(stimulus.trigSeq) && ...
+            stimulus.trigSeq(frame) > 0
+            Screen('FillRect',display.windowPtr, 255, params.siteSpecific.trigRect); % white photodiode trigger
+        else
+            Screen('FillRect',display.windowPtr, 0, params.siteSpecific.trigRect); % black photodiode trigger
+        end
+    end
+    
     %--- update screen
     VBLTimestamp = Screen('Flip',display.windowPtr);
-    
     
     % Send trigger, if requested (if stimulus.trigSeq > 0)
     if isfield(stimulus, 'trigSeq') && ~isempty(stimulus.trigSeq) && ...
@@ -235,5 +244,5 @@ else
     % monitor is greater than 100 Hz, this might make you a frame
     % early. [So consider going to down to 5 ms? What is the minimum we
     % need to ensure that we are not a frame late?]
-    waitTime = (GetSecs-lastFlip)-desiredWaitTime + .015;
+    waitTime = (GetSecs-lastFlip)-desiredWaitTime + .010;
 end
