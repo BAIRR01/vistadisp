@@ -71,7 +71,7 @@ fprintf('[%s]:Running. Hit %s to quit.\n',mfilename, quitProgKey);
 
 if contains(params.sensoryDomain,'tactile','IgnoreCase',true)
     % present the tactile stimulus
-    presentVibrotactileStimulus(params.VTSDevice);
+    presentVibrotactileStimulus(params);
 end
 
 %initialize counter
@@ -215,6 +215,11 @@ end
 ShowCursor;
 timing = GetSecs-t0;
 fprintf('[%s]:Stimulus run time: %f seconds [should be: %f].\n',mfilename,timing,max(stimulus.seqtiming));
+
+if contains(params.sensoryDomain,'tactile','IgnoreCase',true)
+    % stop the tactile stimulus
+    NI_DAQmxStopTask(params.analogOutputTaskHandle(1));
+end
 
 return;
 

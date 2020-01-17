@@ -40,10 +40,23 @@ switch lower(params.sensoryDomain)
         stimPath = fullfile(vistadispRootPath, 'StimFiles', params.loadMatrix);
         load(stimPath, 'stimulus');
   
+        % add path to extra functions
+        addpath C:\Users\winawerlab\Documents\MATLAB\low-latency-startForeground
         % Initialize the vibrotactile device
         params = setupVibrotactileDevice(stimulus.NIdaqRate, stimulus.NIdaqNames, stimulus.numOfStimulators,params);
-        queueOutputData(params.VTSDevice, stimulus.vibrotactileStimulus);
-        prepare(params.VTSDevice);%slightly improve timing
+        % create analog output channel
+        params.analogOutputChannel(1) = params.VTSDevice.Channels(1);
+        % create task handle for this channel
+        params.analogOutputTaskHandle(1) = params.analogOutputChannel(1).TaskHandle;
+        % configure handle
+        NI_DAQmxCfgSampClkTiming(params.analogOutputTaskHandle(1), stimulus.NIdaqRate, size(stimulus.vibrotactileStimulus, 1));
+        % queue stimulus
+        NI_DAQmxWriteAnalogF64(params.analogOutputTaskHandle(1), stimulus.vibrotactileStimulus);
+%  % start presentation
+% NI_DAQmxStartTask(params.analogOutputTaskHandle(1));
+       
+%         queueOutputData(params.VTSDevice, stimulus.vibrotactileStimulus);
+%         prepare(params.VTSDevice);%slightly improve timing
         
         clear stimulus
     otherwise

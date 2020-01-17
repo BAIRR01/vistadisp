@@ -1,4 +1,4 @@
-function params = setupVibrotactileDevice(NIdaqRate, NIdaqNames, numOfStimulators,params)
+function params = setupVibrotactileDevice(NIdaqRate, NIdaqNames, numOfStimulators, params)
 % sets up the NIdaq device with number of channels equal to nrStimulators
 % setupVibrotactileDevice (VTSOptions)
 %
@@ -30,7 +30,13 @@ for dd = 1:length(NIdaqNames)
         stimName = sprintf('ao%d', ii);
         addAnalogOutputChannel(VTSDevice, NIdaqName, stimName, 'Voltage');
     end
-end   
-    params.VTSDevice = VTSDevice;
-    fprintf('\nNIdaq box successfully initialized\n\n')
+end
+
+switch lower(params.site)
+    case 'nyuecog' % add additional channel for trigger
+        stimName = sprintf('ao%d', ii + 1);
+        addAnalogOutputChannel(VTSDevice, NIdaqName, stimName, 'Voltage');
+end
+params.VTSDevice = VTSDevice;
+fprintf('\nNIdaq box successfully initialized\n\n')
 end
