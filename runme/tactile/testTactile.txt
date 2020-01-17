@@ -1,2 +1,1 @@
-TactileRandom_1
-TactileTemporal_1
+TactileTemporalVisualTiming_1
