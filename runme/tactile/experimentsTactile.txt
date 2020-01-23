@@ -1,1 +1,6 @@
-ascendingHand_1
+TactileFingerMappingRandom_1
+TactileFingerMappingRandom_2
+TactileTemporal_1
+TactileTemporal_2
+TactileTemporalVisualTiming_1
+TactileTemporalVisualTiming_2
