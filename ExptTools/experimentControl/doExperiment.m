@@ -7,6 +7,9 @@ function quitProg = doExperiment(params)
 params = setScreenParams(params);
 % params.display.screenNumber   =1
 
+% Check if we need to adjust the background color
+params = setBackgroundColor(params);
+
 % Site-specific settings
 params = initializeSiteSpecificEnvironment(params);
 
