@@ -40,8 +40,6 @@ switch lower(params.sensoryDomain)
         stimPath = fullfile(vistadispRootPath, 'StimFiles', params.loadMatrix);
         load(stimPath, 'stimulus');
   
-        % add path to extra functions
-        addpath C:\Users\winawerlab\Documents\MATLAB\low-latency-startForeground
         % Initialize the vibrotactile device
         params = setupVibrotactileDevice(stimulus.NIdaqRate, stimulus.NIdaqNames, stimulus.numOfStimulators,params);
         % create analog output channel
