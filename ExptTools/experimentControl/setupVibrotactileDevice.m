@@ -21,16 +21,16 @@ end
 VTSDevice       = daq.createSession('ni');
 VTSDevice.Rate  = NIdaqRate; % Rate of operation (scans/s)
 
-for dd = 1:length(NIdaqNames)
-    % DAQ names (each can run up to 10 stimulators)
-    NIdaqName = NIdaqNames{dd};
-    
-    % Add all the output channels to the session
-    for ii = 0:(numOfStimulators-1)
-        stimName = sprintf('ao%d', ii);
-        addAnalogOutputChannel(VTSDevice, NIdaqName, stimName, 'Voltage');
-    end
+
+% DAQ names (each can run up to 10 stimulators)
+NIdaqName = NIdaqNames;
+
+% Add all the output channels to the session
+for ii = 0:(numOfStimulators-1)
+    stimName = sprintf('ao%d', ii);
+    addAnalogOutputChannel(VTSDevice, NIdaqName, stimName, 'Voltage');
 end
+
 
 switch lower(params.site)
     case 'nyuecog' % add additional channel for trigger
