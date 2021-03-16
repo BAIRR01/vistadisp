@@ -4,5 +4,6 @@
 *.DS_Store
 *.log
 Data/*
-StimFiles/*
+StimFiles/*.mat
+StimFiles/*.png
 exptTools/displays/SoMMacBook/*
